@@ -402,3 +402,115 @@ $user->attach(new leader('老板'));
 $user->login();
 
 ```
+
+## 职责链模式
+
+```
+
+//责任链模式
+
+class board{
+	public $power = 1;
+
+	protected $leader = 'admin';
+
+	public function process($lev){
+
+		if($lev <= $this->power){
+
+			echo "版主删除帖";
+		}else{
+
+			$leader = new $this->leader;
+			$leader->process($lev);
+		}
+	}
+}
+
+class admin{
+
+	public $power = 2;
+
+	protected $leader = 'police';
+
+	public function process($lev){
+
+		if($lev <= $this->power){
+
+			echo "管理员封号";
+		}else{
+
+			$leader = new $this->leader;
+			$leader->process($lev);
+		}
+	}
+}
+
+class police{
+
+	protected $leader = null;
+
+	public function process(){
+		echo "抓起来";
+	}
+}
+
+$lev = 3;
+
+
+$pro = new board();
+
+$pro->process($lev);
+
+```
+
+## 策略模式
+
+```
+
+//策略模式
+
+interface Math{
+	public function cale($op1,$op2);
+
+}
+
+class MathAdd implements Math{
+
+	public function cale($op1,$op2){
+
+		return $op1+$op2;
+	}
+}
+
+class MathSub implements Math{
+
+	public function cale($op1,$op2){
+
+		return $op1-$op2;
+	}
+}
+
+//封装一个虚拟环境
+class Cmath{
+
+	protected $calc = null;
+
+	public function __construct($value){
+
+		$this->calc = new $value;
+	}
+
+	public  function cale($op1,$op2){
+
+		 return $this->calc->cale($op1,$op2);
+	}
+}
+
+$cmath = new Cmath('MathSub');
+
+$res = $cmath->cale(1,2);
+
+echo $res;
+
+```
