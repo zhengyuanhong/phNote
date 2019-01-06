@@ -463,7 +463,6 @@ $pro = new board();
 $pro->process($lev);
 
 ```
-
 ## 策略模式
 
 ```
