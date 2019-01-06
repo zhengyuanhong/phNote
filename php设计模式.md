@@ -304,3 +304,101 @@ $s2 = clone $s1;//会报错
 
 
 ```
+
+## 观察者模式
+
+php提供的两个接口，一个被观察者接口SplSubject，一个或多个观察者接口SPLObserver,和一个可以储存对象的类SplObjectStorage。被观察者有三个方法，需要实现这三个方法，一个attach可以理解为添加一个观察者，detach可以理解为删除掉一个观察者，一个notify里面做循环执行被观察者的update方法(被观察者被存储在splobjectstorage类里面)，update方法把本类作为参数传进去。
+
+//被观察者
+```
+class user implements SplSubject{
+	public $lognum;
+	public $work;
+
+	public $observes = null;
+
+	public function __construct($lognum,$work){
+
+		$this->lognum = rand(1,10);
+		$this->work = $work;
+
+		$this->observes = new SplObjectStorage();
+
+	}
+
+	public function login(){
+
+		$this->notify();
+	}
+
+	public function attach(SPLObserver $observer){
+
+		$this->observes->attach($observer);
+
+	}
+
+	public function detach(SPLObserver $observer){
+		$this->observes->detach($observer);
+	}
+
+	public function notify(){
+		$this->observes->rewind();
+
+		while ($this->observes->valid()) {
+			
+			$observer = $this->observes->current();
+
+			$observer->update($this);
+
+			$this->observes->next();
+		}
+	}
+
+}
+
+
+//安全观察者
+class secrity implements SPLObserver{
+
+	public function update(SplSubject $subject){
+
+		if($subject->lognum<3){
+			echo "安全登陆观察者：这是第".$subject->lognum."安全登陆</br>";
+		}else{
+			echo "安全登陆观察者：这是第".$subject->lognum."登陆异常</br>";;
+		}
+	}
+}
+
+class leader implements SPLObserver{
+
+	protected $name;
+
+	public function __construct($name){
+
+		$this->name = $name;
+
+	}
+
+	public function update(SplSubject $subject){
+
+		if($subject->work == '1' ){
+
+			echo "老板观察者：".$this->name."叫你工作了";
+		}else{
+
+			echo "老板观察者：你可以走了";
+		}
+	}
+
+}
+
+$user = new user(1,'0');
+
+$user->attach(new secrity());
+
+$user->attach(new leader('老板'));
+
+$user->login();
+
+```
