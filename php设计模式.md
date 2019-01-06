@@ -402,3 +402,54 @@ $user->attach(new leader('老板'));
 $user->login();
 
 ```
+## 策略模式
+
+```
+
+//策略模式
+
+interface Math{
+	public function cale($op1,$op2);
+
+}
+
+class MathAdd implements Math{
+
+	public function cale($op1,$op2){
+
+		return $op1+$op2;
+	}
+}
+
+class MathSub implements Math{
+
+	public function cale($op1,$op2){
+
+		return $op1-$op2;
+	}
+}
+
+//封装一个虚拟环境
+class Cmath{
+
+	protected $calc = null;
+
+	public function __construct($value){
+
+		$this->calc = new $value;
+	}
+
+	public  function cale($op1,$op2){
+
+		 return $this->calc->cale($op1,$op2);
+	}
+}
+
+$cmath = new Cmath('MathSub');
+
+$res = $cmath->cale(1,2);
+
+echo $res;
+
+```
+
