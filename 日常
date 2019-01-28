@@ -1,0 +1,98 @@
+<?php
+
+//单例
+class Single{
+
+    private static $instance = null;
+
+    private function __construct(){
+
+    }
+
+    private function __clone()
+    {
+        // TODO: Implement __clone() method.
+    }
+
+    public static function getInstance(){
+        if(!self::$instance instanceof self){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+}
+
+//工厂模式
+
+interface people{
+    public function go();
+    public function eat($x);
+}
+
+class Woman implements people{
+    public function go(){
+        echo '去逛街';
+    }
+
+    public function eat($x){
+        echo 'eat'.$x;
+    }
+}
+
+class man implements people{
+    public function go(){
+        echo '去上班';
+    }
+
+    public function eat($x){
+        echo 'man eat'.$x;
+    }
+}
+
+class boss{
+    public static function w(){
+        return new Woman();
+    }
+
+    public static function m(){
+        return new man();
+    }
+}
+
+$w = boss::w();
+$w->go();
+$w->eat('ddd');
+
+$m = boss::m();
+$m->go();
+
+//策略
+abstract class web{
+    abstract public function page();
+}
+
+class baidu extends web{
+    public function page(){
+        return 'www.baidu.com';
+    }
+}
+
+class sogou extends  web{
+    public function page(){
+        return 'www.sogou.com';
+    }
+}
+
+class CC{
+    public static function login($object){
+        return $object->page();
+    }
+}
+
+echo CC::login(new baidu());
+echo CC::login(new sogou());
+
+
+
+
