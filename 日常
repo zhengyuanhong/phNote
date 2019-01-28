@@ -94,5 +94,49 @@ echo CC::login(new baidu());
 echo CC::login(new sogou());
 
 
+//观察者
+abstract class Loads{
 
+    private $events = [];
+
+     public function addEvent(observer $observer){
+        $this->events[] = $observer;
+    }
+
+    public function notify(){
+         foreach($this->events as $observer){
+             $observer->update();
+         }
+    }
+
+}
+
+class Events extends Loads{
+    public function tiger(){
+        echo "Event<br>";
+    }
+}
+
+interface Observer{
+    public function update();
+}
+
+class OB1 implements Observer {
+    public function update(){
+        echo '观察者1号';
+    }
+}
+
+class OB2 implements Observer{
+    public function update(){
+        echo '观察者2号';
+    }
+}
+
+$one = new Events();
+$one->addEvent(new OB1());
+$one->addEvent(new Ob2());
+
+$one->tiger();
+$one->notify();
 
