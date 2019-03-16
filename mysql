@@ -1,0 +1,2 @@
+mysql -h127.0.0.1 -uroot -proot minipottery < ~/Downloads/mp20190316.sql //导入数据库
+mysqldump -h127.0.0.1 -uroor -proot 数据库名 > 倒出的目录
